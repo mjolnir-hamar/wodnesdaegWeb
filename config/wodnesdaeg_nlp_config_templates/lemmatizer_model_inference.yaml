@@ -1,0 +1,50 @@
+fill_paths:
+  inference_file_path: pipeline.pipes.0.execution_steps.0.args.file_path
+  pos_tagger_model_path: pipeline.pipes.1.execution_steps.0.args.model_location
+  lemmatizer_model_path: pipeline.pipes.2.execution_steps.0.args.model_location
+  output_file_path: pipeline.pipes.2.execution_steps.2.args.output_fname
+
+pipeline:
+  pipes:
+    - name: load_file
+      output: read_file.file_lines
+      src_cls_name: FlatFileReader
+      execution_steps:
+        - name: read_file
+          args:
+            file_path: <to_fill>
+          expected_outputs: [file_lines]
+    - name: pos_model_pred
+      output: run_inference.model_predictions
+      src_cls_name: HuggingFacePytorchModelPredictor
+      args:
+        task: pos_tagging
+      execution_steps:
+        - name: create_model_pipeline
+          args:
+            model_location: <to_fill>
+          expected_outputs: [pipeline]
+        - name: run_inference
+          args:
+            cls: create_model_pipeline.pipeline
+            file_lines: load_file.file_lines
+          expected_outputs: [model_predictions]
+    - name: lemma_model_pred
+      output: run_inference.model_predictions
+      src_cls_name: HuggingFacePytorchModelPredictor
+      args:
+        task: lemmatization
+      execution_steps:
+        - name: create_model_pipeline
+          args:
+            model_location: <to_fill>
+          expected_outputs: [pipeline]
+        - name: run_inference
+          args:
+            cls: create_model_pipeline.pipeline
+            pos_model_predictions: pos_model_pred.model_predictions
+          expected_outputs: [model_predictions]
+        - name: write_model_predictions
+          args:
+            model_predictions: run_inference.model_predictions
+            output_fname: <to_fill>
