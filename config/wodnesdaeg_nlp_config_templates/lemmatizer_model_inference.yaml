@@ -33,7 +33,7 @@ pipeline:
       output: run_inference.model_predictions
       src_cls_name: HuggingFacePytorchModelPredictor
       args:
-        task: lemmatization
+        task: lemmatization_causal_lm
       execution_steps:
         - name: create_model_pipeline
           args:

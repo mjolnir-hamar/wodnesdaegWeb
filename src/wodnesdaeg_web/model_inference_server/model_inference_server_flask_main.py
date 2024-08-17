@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 from uuid import uuid4
 from time import sleep, perf_counter
 from flask import Flask, request
@@ -11,9 +12,7 @@ from wodnesdaeg_web.model_inference_server.model_inference_server_base import Mo
 app = Flask(__name__)
 
 
-API_CONFIG = ApiConfigReader.read_config(
-    api_config_yaml="config/api_config.yaml"
-)
+API_CONFIG = ApiConfigReader.read_config(api_config_yaml=sys.argv[1])
 
 
 @app.route("/model_inference", methods=["POST"])

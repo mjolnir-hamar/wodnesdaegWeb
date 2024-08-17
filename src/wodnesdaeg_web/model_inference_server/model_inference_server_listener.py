@@ -46,7 +46,4 @@ class ModelInferenceServerListener(ModelInferenceServerBase):
                         )
                         pipeline_executor()
                         os.remove(new_file)
-
-                else:
-                    print(f"No new files found in {input_dir}")
             sleep(5)
